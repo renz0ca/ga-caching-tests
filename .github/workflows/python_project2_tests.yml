@@ -35,10 +35,9 @@ jobs:
                 pip install poetry
                 deactivate
                 mkdir $PWD/.poetry/.bin
-            - name: Add Poetry to PATH
-              run: |
                 ln -s $PWD/.poetry/bin/poetry $PWD/.poetry/.bin/poetry
-                echo "$PWD/.poetry/.bin" >> $GITHUB_PATH
+            - name: Add Poetry to PATH
+              run: echo "$PWD/.poetry/.bin" >> $GITHUB_PATH
             
             # Prepare Virtual Environment
             - name: Configure Poetry
