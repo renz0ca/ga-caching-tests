@@ -44,7 +44,7 @@ jobs:
             # Check Lint, Test, Security
             - name: Lint Project1
               working-directory: ./project1
-              run: poetry run invoke link
+              run: poetry run invoke lint
             - name: Test Project1
               working-directory: ./project1
               run: poetry run invoke test
