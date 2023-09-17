@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "project-2"
+version = "0.1.0"
+description = "A basic workflow caching test"
+packages = [{ include = "test_project_2" }]
+authors = []
+readme = "README.md"
+repository = "https://github.com/renz0ca/ga-caching-tests"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+bandit = "^1.7.5"
+black = "^23.9.1"
+pytest = "^7.4.2"
+pytest-cov = "^4.1.0"
+safety = "^2.3.5"
+mypy = "^1.5.1"
+ruff = "^0.0.290"
+invoke = "^2.2.0"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+
+[tool.ruff]
+select = ["E", "F", "W", "I"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

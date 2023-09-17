@@ -1,0 +1,56 @@
+name: Project2 Tests
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+    workflow_dispatch:
+    
+jobs:
+    app_tests:
+        runs-on: ubuntu-latest
+        steps:
+
+            # Configure Environment
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            - name: Install Python
+              id: setup-python
+              uses: actions/setup-python@v1
+              with:
+                python-version: 3.9
+            - name: Install Poetry
+              run: curl -sSL https://install.python-poetry.org | python3 -
+            - name: Add Poetry to PATH
+              run: echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+            
+            # Prepare Virtual Environment
+            - name: Configure Poetry
+              run: poetry config virtualenvs.in-project true
+            - name: Load cached virtual environment
+              uses: actions/cache@v3
+              id: cached-dependencies
+              with:
+                path: ./project2/.venv
+                key: venv::${{ runner.os }}::${{ steps.setup-python.outputs.python-version }}::${{ hashFiles('./project2/poetry.lock') }}
+            - name: Install dependencies
+              if: steps.cached-dependencies.outputs.cache-hit != 'true'
+              working-directory: ./project2
+              run: poetry install --no-interaction --no-root
+            - name: Install project
+              working-directory: ./project2
+              run: poetry install --no-interaction --only-root
+            
+            # Check Lint, Test, Security
+            - name: Lint Project2
+              working-directory: ./project2
+              run: poetry run invoke link
+            - name: Test Project2
+              working-directory: ./project2
+              run: poetry run invoke test
+            - name: Run Bandit security check
+              working-directory: ./project2
+              run: poetry run bandit -r ./test_project_2 -ll -ii
+            - name: Safety vulnerability check
+              working-directory: ./project2
+              run: poetry export -f requirements.txt | poetry run safety check --full-report --stdin
