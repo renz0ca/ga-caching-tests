@@ -35,11 +35,14 @@ jobs:
                 pip install poetry
                 deactivate
             - name: Add Poetry to PATH
-              run: alias poetry="$PWD/.poetry/bin/poetry"
-            - name: Configure Poetry
-              run: poetry config virtualenvs.in-project true
+              run: |
+                mkdir $PWD/.venv/.bin
+                ln -s $PWD/.venv/bin/poetry $PWD/.poetry/.bin/poetry
+                echo "$PWD/.poetry/.bin" >> $GITHUB_PATH
             
             # Prepare Virtual Environment
+            - name: Configure Poetry
+              run: poetry config virtualenvs.in-project true
             - name: Load cached virtual environment
               uses: actions/cache@v3
               id: cached-dependencies
