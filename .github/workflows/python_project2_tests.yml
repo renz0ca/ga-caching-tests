@@ -36,12 +36,12 @@ jobs:
                 deactivate
                 mkdir $PWD/.poetry/.bin
                 ln -s $PWD/.poetry/bin/poetry $PWD/.poetry/.bin/poetry
-            - name: Configure Poetry
-              run: |
-                echo "$PWD/.poetry/.bin" >> $GITHUB_PATH
-                poetry config virtualenvs.in-project true
+            - name: Add Poetry to PATH
+              run: echo "$PWD/.poetry/.bin" >> $GITHUB_PATH
             
             # Prepare Virtual Environment
+            - name: Configure Poetry
+              run: poetry config virtualenvs.in-project true
             - name: Load cached virtual environment
               uses: actions/cache@v3
               id: cached-dependencies
