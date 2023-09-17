@@ -34,9 +34,9 @@ jobs:
                 source ./.poetry/bin/activate
                 pip install poetry
                 deactivate
+                mkdir $PWD/.poetry/.bin
             - name: Add Poetry to PATH
               run: |
-                mkdir $PWD/.poetry/.bin
                 ln -s $PWD/.poetry/bin/poetry $PWD/.poetry/.bin/poetry
                 echo "$PWD/.poetry/.bin" >> $GITHUB_PATH
             
