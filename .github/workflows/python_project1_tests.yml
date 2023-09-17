@@ -16,15 +16,32 @@ jobs:
               uses: actions/checkout@v3
             - name: Install Python
               id: setup-python
-              uses: actions/setup-python@v1
+              uses: actions/setup-python@v4
               with:
                 python-version: 3.9
+
+            # Prepare Poetry
+            - name: Load cached Poetry install
+              uses: actions/cache@v3
+              id: cached-poetry
+              with:
+                path: ./.poetry
+                key: venv::${{ runner.os }}::${{ steps.setup-python.outputs.python-version }}::poetry
             - name: Install Poetry
-              uses: snok/install-poetry@v1
-            
-            # Prepare Virtual Environment
+              if: steps.cached-poetry.outputs.cache-hit != 'true'
+              run: | 
+                python -m venv .poetry
+                source ./.poetry/bin/activate
+                pip install poetry
+                deactivate
+                mkdir $PWD/.poetry/.bin
+                ln -s $PWD/.poetry/bin/poetry $PWD/.poetry/.bin/poetry
             - name: Configure Poetry
-              run: poetry config virtualenvs.in-project true
+              run: |
+                echo "$PWD/.poetry/.bin" >> $GITHUB_PATH
+                poetry config virtualenvs.in-project true
+              
+            # Prepare Virtual Environment
             - name: Load cached virtual environment
               uses: actions/cache@v3
               id: cached-dependencies
